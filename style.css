@@ -1,0 +1,117 @@
+/* Reset default browser styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body and general styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    overflow-y: scroll;
+    background-color: #c1d7d7;
+}
+
+html {
+    height: 100%;
+    
+}
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    background-attachment: fixed;
+}
+
+/* Spinner */
+.spinner {
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#backButton {
+    display: none; /* Initially hidden */
+}
+
+#scrollToTopButton {
+    display: none; /* Initially hidden */
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    opacity: 0.7;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    transition: opacity 0.3s ease, background-color 0.3s ease;
+}
+
+#scrollToTopButton:hover {
+    opacity: 1;
+    background-color: #0056b3;
+}
+
+/* Lesson menu and content */
+.lesson-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+    align-items: flex-start; /* Align items to the start */
+}
+
+.lesson-menu button {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: #fff;
+    border: none;
+    padding: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Ensure buttons take full width */
+    text-align: left; /* Align text to the left */
+}
+
+.lesson-menu button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.lesson-content {
+    margin-top: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.lesson-content img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 10px 0;
+}
+
+@media (max-width: 768px) {
+    .lesson-menu {
+        flex-direction: column;
+        align-items: center;
+    }
+}
