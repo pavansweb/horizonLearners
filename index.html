@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,9 +9,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="container text-center mt-5">
         <button id="backButton" class="btn btn-danger mb-3" onclick="showMenu()">Back</button>
+        <label class="switch">
+            <input type="checkbox" id="darkModeToggle">
+            <span class="slider round"></span>
+            <span class="icon sun-icon">&#x2600;</span> <!-- Sun icon -->
+            <span class="icon moon-icon">&#x1F319;</span> <!-- Moon icon -->
+        </label>
         <h1>Horizon Learners</h1>
         <div id="spinner" class="spinner-border text-primary mt-3" role="status" style="display: none;">
             <span class="sr-only">Loading...</span>
@@ -35,14 +43,16 @@
                 <button class="btn btn-primary btn-block" onclick="loadSubject('computer')">Computer</button>
             </div>
         </div>
+
         <div id="content" class="mt-4">
             <p>Welcome to our App. Select a subject to get started.</p>
         </div>
     </div>
-    <button id="scrollToTopButton" onclick="scrollToTop()">↑</button>
+    <button id="scrollToTopButton" onclick="scrollToTop()">Scroll back↑</button>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>

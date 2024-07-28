@@ -4,6 +4,46 @@ const menu = document.getElementById('menu');
 const backButton = document.getElementById('backButton');
 const spinner = document.getElementById('spinner');
 const scrollToTopButton = document.getElementById('scrollToTopButton');
+const toggle = document.getElementById('darkModeToggle');
+const sunIcon = document.querySelector('.sun-icon');
+const moonIcon = document.querySelector('.moon-icon');
+
+const setIcons = (isDarkMode) => {
+    if (isDarkMode) {
+        sunIcon.style.display = 'inline';
+        moonIcon.style.display = 'none';
+    } else {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'inline';
+    }
+};
+
+toggle.addEventListener('change', () => {
+    const isDarkMode = toggle.checked;
+    document.body.classList.toggle('dark-mode', isDarkMode);
+    setIcons(isDarkMode);
+});
+
+if (localStorage.getItem('dark-mode') === 'enabled') {
+    toggle.checked = true;
+    document.body.classList.add('dark-mode');
+    setIcons(true);
+} else {
+    setIcons(false);
+}
+
+
+toggle.addEventListener('change', () => {
+    if (toggle.checked) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('dark-mode', 'enabled');
+        setIcons(true);
+    } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('dark-mode', 'disabled');
+        setIcons(false);
+    }
+});
 
 // Function to load a subject
 function loadSubject(subject) {

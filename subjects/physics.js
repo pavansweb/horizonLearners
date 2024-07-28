@@ -23,24 +23,24 @@ function loadLesson(lesson) {
             content = `
                 <h2>Lesson 1: Force</h2>
                 <p>This is the content for Lesson 1.</p>
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error">`;
+                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
+                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
+                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
+                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
+                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
+                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
+                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">`;
             break;
         case 'lesson2':
             content = `
                 <h2>Lesson 2: Work, Energy and Power</h2>
                 <p>This is the content for Lesson 2.</p>
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error">`;
+                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
+                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
+                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
+                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
+                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
+                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">`;
             break;
 
         // Add cases for other lessons
