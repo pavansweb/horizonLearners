@@ -21,7 +21,7 @@ def login_hl():
 
 @app.route('/register')
 def register_hl():
-    return render_template('registration.html')
+    return render_template('register.html')
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -37,7 +37,7 @@ def register():
     new_user = User(email=email, password_hash=hashed_password)
     db.session.add(new_user)
     db.session.commit()
-    return jsonify({'message': 'User registered successfully'})
+ 
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -48,6 +48,7 @@ def login():
     if user and check_password_hash(user.password_hash, password):
         return jsonify({'message': 'Login successful'})
     return jsonify({'message': 'Invalid credentials'}), 401
+  
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000, debug=True)

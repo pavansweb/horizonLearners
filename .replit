@@ -1,10 +1,15 @@
-entrypoint="index.html"
 hidden=[".config"]
-modules = ["web:v2-20230623-0b7a606"]
+modules = ["web", "nodejs-20", "python-3.12"]
+run = "python app.py"
 
 [nix]
-channel = "stable-23_11"
+channel = "stable-24_05"
 
 [deployment]
 publicDir = "/"
 deploymentTarget = "static"
+run = ["sh", "-c", "python app.py"]
+
+[[ports]]
+localPort = 3000
+externalPort = 80

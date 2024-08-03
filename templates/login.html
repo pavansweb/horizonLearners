@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+  
 </head>
 <body>
   <div class="background">
@@ -25,10 +26,22 @@
     <input type="password" id="password" placeholder="Password" required>
 
     <button type="submit">Login</button>
-    <a href='/'>Create an account</a>
+    <a href='/register'>Create an account</a>    
   </form>
 
+  <div id="notification" class="notification"></div>
+
   <script>
+    function showNotification(message) {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.classList.add('show');
+
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 2500);
+    }
+
     document.getElementById('registerForm').addEventListener('submit', function(event) {
       event.preventDefault(); 
 
@@ -44,13 +57,18 @@
       })
       .then(response => response.json())
       .then(data => {
-        alert(data.message); 
+        if (data.message === 'Login successful') {
+          window.location.href = '/'; 
+        } else {
+          showNotification(data.message);
+        }
       })
       .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred. Please try again.');
+        showNotification('An error occurred. Please try again.');
       });
     });
   </script>
 </body>
 </html>
+
