@@ -1,0 +1,212 @@
+const content = document.getElementById("content");
+const menu = document.getElementById("menu");
+const backButton = document.getElementById("backButton");
+const spinner = document.getElementById("spinner");
+const scrollToTopButton = document.getElementById("scrollToTopButton");
+const toggle = document.getElementById("darkModeToggle");
+const sunIcon = document.querySelector(".sun-icon");
+const moonIcon = document.querySelector(".moon-icon");
+const profilePictureInput = document.getElementById("profilePictureInput");
+const profilePicture = document.getElementById("profilePicture");
+
+// Function to set dark mode icons
+const setIcons = (isDarkMode) => {
+    if (isDarkMode) {
+        sunIcon.style.display = "inline";
+        moonIcon.style.display = "none";
+    } else {
+        sunIcon.style.display = "none";
+        moonIcon.style.display = "inline";
+    }
+};
+
+// Dark mode toggle
+toggle.addEventListener("change", () => {
+    const isDarkMode = toggle.checked;
+    document.body.classList.toggle("dark-mode", isDarkMode);
+    setIcons(isDarkMode);
+    localStorage.setItem("dark-mode", isDarkMode ? "enabled" : "disabled");
+});
+
+if (localStorage.getItem("dark-mode") === "enabled") {
+    toggle.checked = true;
+    document.body.classList.add("dark-mode");
+    setIcons(true);
+} else {
+    setIcons(false);
+}
+
+// Function to load a subject
+function loadSubject(subject) {
+    menu.style.display = "none";
+    backButton.style.display = "block";
+    spinner.style.display = "block";
+
+    loadSubjectContent(subject);
+}
+
+// Function to dynamically load the subject script
+function loadSubjectContent(subject) {
+    content.innerHTML = "";
+
+    const script = document.createElement("script");
+    script.src = `static/subjects/${subject}.js`;
+    script.onload = () => {
+        spinner.style.display = "none";
+
+        if (typeof showSubjectContent === "function") {
+            showSubjectContent(content);
+        } else {
+            content.innerHTML = `<p>Error loading subject content.</p>`;
+        }
+    };
+    script.onerror = () => {
+        spinner.style.display = "none";
+        content.innerHTML = `<p>Error loading subject content.</p>`;
+    };
+    document.body.appendChild(script);
+}
+
+// Function to show the main menu
+function showMenu() {
+    content.innerHTML = `<p>Select a subject to get started.</p>`;
+    menu.style.display = "flex";
+    backButton.style.display = "none";
+    spinner.style.display = "none";
+
+    const subjectScripts = document.querySelectorAll(
+        'script[src^="static/subjects/"]',
+    );
+    subjectScripts.forEach((script) => script.remove());
+}
+
+// Function to scroll to the top
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// Show scroll to top button when scrolling
+window.addEventListener("scroll", () => {
+    if (window.scrollY > 200) {
+        scrollToTopButton.style.display = "block";
+    } else {
+        scrollToTopButton.style.display = "none";
+    }
+});
+
+// Toggle sidebar visibility
+function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    if (sidebar.style.left === '0px') {
+        sidebar.style.left = '-250px';
+    } else {
+        sidebar.style.left = '0';
+    }
+}
+
+
+// Logout function
+function logout() {
+    fetch("/logout", { method: "POST" })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                window.location.href = "/login";
+            } else {
+                alert("Logout failed");
+            }
+        })
+        .catch((error) => {
+            alert("Logout failed");
+        });
+}
+
+// Fetch user info and set profile picture
+fetch("/user")
+    .then((response) => response.json())
+    .then((data) => {
+        const userInfoElement = document.getElementById("user-info");
+        const toggleSidebarButton = document.getElementById(
+            "toggleSidebarButton",
+        );
+
+        if (data.email) {
+            userInfoElement.innerHTML = `
+            
+            <div class="profile-pic">
+    <label class="-label" for="file">
+        <span class="glyphicon glyphicon-camera"></span>
+        <span>Change Image</span>
+        <input id="file" type="file" onchange="uploadProfilePicture(event)" />
+    </label>
+</div>
+
+            
+                    
+                    <p>Email: ${data.email}</p>
+                    <p>Joined: ${data.joined}</p>
+                    <button class="btn btn-primary" onclick="logout()">Logout</button>
+                `;
+            toggleSidebarButton.style.display = "block";
+        } else {
+            userInfoElement.innerHTML = `
+                    <p>You are not logged in. <a href="/login">Login</a> to access your account.</p>
+                `;
+        }
+    })
+    .catch((error) => {
+        console.error("Error fetching user info:", error);
+    });
+
+// Handle profile picture upload
+function uploadProfilePicture(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        fetch("/upload-profile-picture", {
+            method: "POST",
+            body: formData,
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.message === "Profile picture uploaded successfully") {
+                    document.querySelector(".-label").style.backgroundImage =
+                        `url(${data.profile_picture_url})`;
+                    loadProfilePicture();
+                    localStorage.setItem(
+                        "profilePicture",
+                        data.profile_picture_url,
+                    );
+                    
+                } else {
+                    alert("Profile picture upload failed: " + data.message);
+                }
+            })
+            .catch(() => {
+                alert("Error during profile picture upload");
+            });
+    }
+}
+
+// Fetch the profile picture URL from the server and set it
+function loadProfilePicture() {
+    fetch("/user")
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.profile_picture) {
+                document.getElementById("toggleSidebarButton").style.backgroundImage =
+                        `url(${data.profile_picture})`;;
+
+                document.querySelector(".-label").style.backgroundImage =
+                    `url(${data.profile_picture})`;
+            }
+        })
+        .catch(() => {
+            console.error("Error fetching profile picture");
+        });
+}
+
+// Load the profile picture when the DOM is ready
+document.addEventListener("DOMContentLoaded", loadProfilePicture);

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Study App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/contact.css"> <!-- External CSS -->
+</head>
+
+<body>
+    <div class="container">
+        <header class="text-center mb-4">
+            <h1 class="page-title">Get in Touch</h1>
+        </header>
+        <form class="contact-form" method="post" action="{{ url_for('contact') }}">
+            <div class="form-group">
+                <input type="text" id="input-name" name="name" class="form-control" placeholder="Name" required>
+            </div>
+            <div class="form-group">
+                <input type="email" id="input-email" name="email" class="form-control" placeholder="Email address" required>
+            </div>
+            <div class="form-group">
+                <input type="text" id="input-subject" name="subject" class="form-control" placeholder="Subject" required>
+            </div>
+            <div class="form-group">
+                <textarea name="message" id="input-message" class="form-control" placeholder="Message" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+    </div>
+</body>
+
+</html>

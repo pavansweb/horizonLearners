@@ -14,7 +14,7 @@ function showSubjectContent(container) {
             <button class="btn btn-primary btn-block" onclick="loadLesson('lesson9')">Chapter 9: i</button>
             <button class="btn btn-primary btn-block" onclick="loadLesson('lesson10')">Chapter 10: j</button>
         </div>
-        
+
         <div id="lessonContent" class="lesson-content">
             <p>Select a lesson to view its content.</p>
         </div>

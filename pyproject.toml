@@ -11,6 +11,10 @@ python = "^3.12"
 flask = "^3.0.3"
 flask-sqlalchemy = "^3.1.1"
 werkzeug = "^3.0.3"
+flask-cors = "^4.0.1"
+flask-mail = "^0.10.0"
+flask-migrate = "^4.0.7"
+requests = "^2.32.3"
 
 
 [build-system]

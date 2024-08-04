@@ -1,0 +1,8 @@
+sidebar fix(done )
+pfp loader
+login page fix , also collect name of the user and display it in account settings 
+ 
+pfp fit in nav,(done )
+
+email authenticater
+email password changer

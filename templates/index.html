@@ -1,317 +1,33 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study App</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        /* CSS Variables for Themes */
-        :root {
-            --background-color: #f0f4f8;
-            --container-bg: linear-gradient(135deg, #ffffff, #dbeafe);
-            --container-shadow: rgba(0, 0, 0, 0.1);
-            --button-bg: linear-gradient(135deg, #6ec1e4, #367fa9);
-            --button-hover-bg: #285e8e;
-            --text-color: #2c3e50;
-            --lesson-content-bg: #ffffff;
-            --lesson-content-shadow: rgba(0, 0, 0, 0.1);
-            --img-border-color: #bdc3c7;
-            --scrollToTopButton: rgba(41, 128, 185, 0.7);
-        }
-
-        body.dark-mode {
-            --background-color: #121212;
-            --container-bg: linear-gradient(135deg, #1f1f1f, #141414);
-            --container-shadow: rgba(255, 255, 255, 0.1);
-            --button-bg: linear-gradient(135deg, #3a3a3a, #2c2c2c);
-            --button-hover-bg: #505050;
-            --text-color: #e0e0e0;
-            --lesson-content-bg: #242424;
-            --lesson-content-shadow: rgba(255, 255, 255, 0.1);
-            --img-border-color: #444;
-            --scrollToTopButton: rgb(0, 0, 0);
-        }
-
-        /* Reset default browser styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Body and general styles */
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            overflow-y: scroll;
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
-
-        html {
-            height: 100%;
-        }
-
-        .container {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: var(--container-bg);
-            background-attachment: fixed;
-            box-shadow: 0 10px 30px var(--container-shadow), 0 20px 40px var(--container-shadow);
-            padding: 20px;
-        }
-
-        /* Header */
-        header {
-            position: fixed;
-            top: 0px;
-            width: 100%;
-            background: var(--container-bg);
-            padding: 10px 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* Center content horizontally */
-            text-align: center;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 2rem;
-        }
-
-        header nav {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        header nav a {
-            color: var(--text-color);
-            text-decoration: none;
-            padding: 5px 10px;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-
-        header nav a:hover {
-            background-color: var(--button-bg);
-            color: #fff;
-            border-radius: 5px;
-        }
-
-        /* Toggle Switch */
-        .switch {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: 0.4s;
-            border-radius: 34px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: 0.4s;
-            border-radius: 50%;
-        }
-
-        input:checked+.slider {
-            background-color: #2196f3;
-        }
-
-        input:checked+.slider:before {
-            transform: translateX(26px);
-        }
-
-        .icon {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 20px;
-            pointer-events: none;
-        }
-
-        .sun-icon {
-            left: -30px;
-            color: #ffcc00;
-            display: none;
-            /* Initially hidden */
-        }
-
-        .moon-icon {
-            left: -30px;
-            color: #f1c40f;
-        }
-
-        /* Show sun icon in dark mode */
-        body.dark-mode .sun-icon {
-            display: inline;
-        }
-
-        body.dark-mode .moon-icon {
-            display: none;
-        }
-
-        /* Spinner */
-        .spinner {
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        #backButton {
-            margin-top: 0.2rem;
-            display: none;
-            /* Initially hidden */
-        }
-
-        #scrollToTopButton {
-            display: none;
-            /* Initially hidden */
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            opacity: 0.7;
-            background-color: var(--scrollToTopButton);
-            border-radius: 40px;
-            color: var(--text-color);
-            border: none;
-            padding: 10px;
-            transition: opacity 0.3s ease, background-color 0.3s ease;
-        }
-
-        #scrollToTopButton:hover {
-            opacity: 1;
-            background-color: var(--button-hover-bg);
-            border-radius: 40px;
-            
-        }
-
-        /* Lesson menu and content */
-        .lesson-menu {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin: 20px 0;
-            align-items: flex-start;
-            /* Align items to the start */
-        }
-
-        .lesson-menu button {
-            background: var(--button-bg);
-            color: var(--text-color);
-            border: none;
-            padding: 10px;
-            font-size: 1rem;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            /* Ensure buttons take full width */
-            text-align: left;
-            /* Align text to the left */
-        }
-
-        .lesson-menu button:hover {
-            background-color: var(--button-hover-bg);
-            transform: translateY(-2px);
-        }
-
-        .lesson-content {
-            margin-top: 20px;
-            background-color: var(--lesson-content-bg);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px var(--lesson-content-shadow);
-        }
-
-        .lesson-content img {
-            display: block;
-            width: 100%;
-            max-width: 100%;
-            /* Ensure it doesn't exceed container width */
-            height: auto;
-            border: 1px solid var(--img-border-color);
-            border-radius: 5px;
-            padding: 5px;
-            margin: 10px 0;
-        }
-
-        @media (max-width: 768px) {
-            .lesson-menu {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Horizon Learners</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/style.css" />
 </head>
-
 <body>
-    <header>
-            <h1>Horizon Learners</h1>
-            <nav>
-                <a href="#">Home</a>
-                <a href="#">About</a>
-                <a href="#">Contact</a>
-                <a href="/login">Login</a>
-                
-            </nav>  
+    <nav class="nav">
+        <button id="toggleSidebarButton" class="btn btn-secondary" onclick="toggleSidebar()"> </button>
+        <a href="#" class="logo">Horizon Learners</a>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+        </ul>
         <label class="switch">
-            <input type="checkbox" id="darkModeToggle">
+            <input type="checkbox" id="darkModeToggle" />
             <span class="slider round"></span>
             <span class="icon sun-icon">&#x2600;</span>
             <span class="icon moon-icon">&#x1F319;</span>
         </label>
-    </header>
-
+    </nav>
+    
     <div class="container text-center mt-5">
         <button id="backButton" class="btn btn-danger mb-3" onclick="showMenu()">Back</button>
-        
-        <div id="spinner" class="spinner-border text-primary mt-3" role="status" style="display: none;">
+        <div id="spinner" class="spinner-border text-primary mt-3" role="status" style="display: none">
             <span class="sr-only">Loading...</span>
         </div>
         <div id="menu" class="row mt-4">
@@ -334,136 +50,25 @@
                 <button class="btn btn-primary btn-block" onclick="loadSubject('computer')">Computer</button>
             </div>
         </div>
-
         <div id="content" class="mt-4">
             <p>Welcome to our App. Select a subject to get started.</p>
         </div>
     </div>
-    <button id="scrollToTopButton" onclick="scrollToTop()">↑</button>
+
+    <!-- Sidebar for account settings -->
+    <div id="sidebar" class="sidebar">
+        <span class="close-btn" onclick="toggleSidebar()">×</span>
+        <h3>Account Settings</h3>
+        <div id="user-info">
+            <!-- User info will be populated here -->
+        </div>
+    </div>
+
+    <button id="scrollToTopButton" class="btn btn-primary" onclick="scrollToTop()">↑</button>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <script>
-        // Get references to DOM elements
-        const content = document.getElementById('content');
-        const menu = document.getElementById('menu');
-        const backButton = document.getElementById('backButton');
-        const spinner = document.getElementById('spinner');
-        const scrollToTopButton = document.getElementById('scrollToTopButton');
-        const toggle = document.getElementById('darkModeToggle');
-        const sunIcon = document.querySelector('.sun-icon');
-        const moonIcon = document.querySelector('.moon-icon');
-
-        const setIcons = (isDarkMode) => {
-            if (isDarkMode) {
-                sunIcon.style.display = 'inline';
-                moonIcon.style.display = 'none';
-            } else {
-                sunIcon.style.display = 'none';
-                moonIcon.style.display = 'inline';
-            }
-        };
-
-        toggle.addEventListener('change', () => {
-            const isDarkMode = toggle.checked;
-            document.body.classList.toggle('dark-mode', isDarkMode);
-            setIcons(isDarkMode);
-        });
-
-        if (localStorage.getItem('dark-mode') === 'enabled') {
-            toggle.checked = true;
-            document.body.classList.add('dark-mode');
-            setIcons(true);
-        } else {
-            setIcons(false);
-        }
-
-
-        toggle.addEventListener('change', () => {
-            if (toggle.checked) {
-                document.body.classList.add('dark-mode');
-                localStorage.setItem('dark-mode', 'enabled');
-                setIcons(true);
-            } else {
-                document.body.classList.remove('dark-mode');
-                localStorage.setItem('dark-mode', 'disabled');
-                setIcons(false);
-            }
-        });
-
-        // Function to load a subject
-        function loadSubject(subject) {
-            // Hide menu, show back button, and show spinner
-            menu.style.display = 'none';
-            backButton.style.display = 'block';
-            spinner.style.display = 'block';
-
-            // Load subject content
-            loadSubjectContent(subject);
-        }
-
-        // Function to dynamically load the subject script
-        function loadSubjectContent(subject) {
-            // Remove any existing content
-            content.innerHTML = '';
-
-            // Dynamically load subject script
-            const script = document.createElement('script');
-            script.src = `static/${subject}.js`;
-            script.onload = () => {
-                // Hide spinner once content is loaded
-                spinner.style.display = 'none';
-
-                // Assuming showSubjectContent is defined in each subject's JS file
-                if (typeof showSubjectContent === 'function') {
-                    showSubjectContent(content);
-                } else {
-                    content.innerHTML = `<p>Error loading subject content.</p>`;
-                }
-            };
-            script.onerror = () => {
-                spinner.style.display = 'none'; // Hide spinner on error
-                content.innerHTML = `<p>Error loading subject content.</p>`;
-            };
-            document.body.appendChild(script);
-        }
-
-        // Function to show the main menu
-        function showMenu() {
-            // Clear content, show menu, and hide spinner
-            content.innerHTML = `<p>Select a subject to get started.</p>`;
-            menu.style.display = 'flex';
-            backButton.style.display = 'none';
-            spinner.style.display = 'none';
-
-            // Remove subject-specific script
-            const subjectScripts = document.querySelectorAll('script[src^="subjects/"]');
-            subjectScripts.forEach(script => script.remove());
-        }
-
-        // Function to show the lesson menu
-        function showLessonMenu() {
-            // Show the lesson menu and hide the lesson content
-            document.querySelector('.lesson-menu').style.display = 'flex';
-            document.getElementById('lessonContent').innerHTML = `<p>Select a lesson to view its content.</p>`;
-        }
-
-        // Function to scroll to the top
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // Show the scroll to top button when the user scrolls down
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 200) {
-                scrollToTopButton.style.display = 'block';
-            } else {
-                scrollToTopButton.style.display = 'none';
-            }
-        });
-
-    </script>
+    <script src="/static/js/index.js"></script>
 </body>
-
 </html>
