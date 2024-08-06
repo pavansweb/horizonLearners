@@ -94,14 +94,7 @@ function scrollToTop() {
     window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// Show scroll to top button when scrolling
-window.addEventListener("scroll", () => {
-    if (window.scrollY > 200) {
-        scrollToTopButton.style.display = "block";
-    } else {
-        scrollToTopButton.style.display = "none";
-    }
-});
+
 
 // Toggle sidebar visibility
 function toggleSidebar() {
