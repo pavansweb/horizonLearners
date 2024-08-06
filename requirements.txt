@@ -1,0 +1,9 @@
+Flask 
+Flask-Mail 
+Flask-SQLAlchemy 
+Flask-Migrate 
+Flask-Cors 
+Werkzeug i
+tsdangerous 
+requests
+gunicorn
