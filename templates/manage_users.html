@@ -55,6 +55,17 @@
         button:hover {
             background-color: #45a049;
         }
+        .delete-button {
+            background-color: #f44336;
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .delete-button:hover {
+            background-color: #d32f2f;
+        }
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -80,6 +91,7 @@
             <thead>
                 <tr>
                     <th>Email</th>
+                    <th>Name</th>
                     <th>Role</th>
                     <th>Actions</th>
                 </tr>
@@ -88,14 +100,23 @@
                 {% for user in users %}
                 <tr>
                     <td>{{ user.email }}</td>
+                    <td>{{ user.name }}</td> 
                     <td>{{ user.role.value }}</td>
                     <td>
-                        <form action="{{ url_for('assign_role', user_id=user.id) }}" method="post">
+                        <!-- Form to update user role -->
+                        <form action="{{ url_for('assign_role', user_id=user.id) }}" method="post" style="display: inline;">
                             <select name="role">
                                 <option value="user" {% if user.role.value == 'user' %}selected{% endif %}>User</option>
-                                <option value="admin" {% if user.role.value == 'admin' %}selected{% endif %}>Admin</option>
+                                <option value="admin0" {% if user.role.value == 'admin0' %}selected{% endif %}>Admin0</option>
+                                <option value="admin1" {% if user.role.value == 'admin1' %}selected{% endif %}>Admin1</option>
+                                <option value="admin2" {% if user.role.value == 'admin2' %}selected{% endif %}>Admin2</option>
                             </select>
                             <button type="submit">Update Role</button>
+                        </form>
+
+                        <!-- Form to delete user -->
+                        <form action="{{ url_for('delete_user', user_id=user.id) }}" method="post" style="display: inline;">
+                            <button type="submit" class="delete-button">Delete</button>
                         </form>
                     </td>
                 </tr>

@@ -7,15 +7,34 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/static/css/style.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
+
+
 </head>
 <body>
+    <div id="overlay" class="overlay">
+        <div class="loader">
+            <div class="loader-square"></div>
+            <div class="loader-square"></div>
+            <div class="loader-square"></div>
+            <div class="loader-square"></div>
+            <div class="loader-square"></div>
+            <div class="loader-square"></div>
+            <div class="loader-square"></div>
+        </div>
+    </div>
+
+
     <nav class="nav">
         <button id="toggleSidebarButton" class="btn btn-secondary" onclick="toggleSidebar()"> </button>
+        
         <a href="#" class="logo">Horizon Learners</a>
         <ul class="nav-links">
             <li><a href="/">Home</a></li>
             <li><a href="#">Services</a></li>
-            <li><a href="/contact">Contact Us</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li id="loginNavItem" class="nav-item"><a href="/login" class="  ">Login/Sign Up</a></li>
+            
         </ul>
         <label class="switch">
             <input type="checkbox" id="darkModeToggle" />
@@ -26,32 +45,32 @@
     </nav>
     
     <div class="container text-center mt-5">
-        <button id="backButton" class="btn btn-danger mb-3" onclick="showMenu()">Back</button>
-        <div id="spinner" class="spinner-border text-primary mt-3" role="status" style="display: none">
-            <span class="sr-only">Loading...</span>
+        <!-- Subject selection -->
+        <div id="subjectSelection">
+            <h2>Select a Subject</h2>
+            <button class="btn btn-primary" onclick="loadSubject('physics')">Physics</button>
+            <button class="btn btn-primary" onclick="showSubjectMenu('chemistry')">Chemistry</button>
+            <button class="btn btn-primary" onclick="showSubjectMenu('maths')">Maths</button>
+            <button class="btn btn-primary" onclick="showSubjectMenu('biology')">Biology</button>
+            <button class="btn btn-primary" onclick="showSubjectMenu('kannada')">Kannada</button>
+            <button class="btn btn-primary" onclick="showSubjectMenu('computer')">Computer</button>
         </div>
-        <div id="menu" class="row mt-4">
-            <div class="col-md-4 mb-2">
-                <button class="btn btn-primary btn-block" onclick="loadSubject('physics')">Physics</button>
-            </div>
-            <div class="col-md-4 mb-2">
-                <button class="btn btn-primary btn-block" onclick="loadSubject('chemistry')">Chemistry</button>
-            </div>
-            <div class="col-md-4 mb-2">
-                <button class="btn btn-primary btn-block" onclick="loadSubject('maths')">Maths</button>
-            </div>
-            <div class="col-md-4 mb-2">
-                <button class="btn btn-primary btn-block" onclick="loadSubject('biology')">Biology</button>
-            </div>
-            <div class="col-md-4 mb-2">
-                <button class="btn btn-primary btn-block" onclick="loadSubject('kannada')">Kannada</button>
-            </div>
-            <div class="col-md-4 mb-2">
-                <button class="btn btn-primary btn-block" onclick="loadSubject('computer')">Computer</button>
-            </div>
+
+        <!-- Board selection -->
+        <div id="boardSelection" style="display: none;">
+            <h2>Select Your Board</h2>
+            <button class="btn btn-primary" onclick="showBoardContent('icse')">ICSE</button>
+            <button class="btn btn-primary" onclick="showBoardContent('cbse')">CBSE</button>
         </div>
+
+        <!-- Lesson content -->
+        <div id="lessonContent" class="mt-4">
+            <p>Select a subject to get started.</p>
+        </div>
+    </div>
+    
         <div id="content" class="mt-4">
-            <p>Welcome to our App. Select a subject to get started.</p>
+            <p> </p>
         </div>
     </div>
 
@@ -64,7 +83,48 @@
         </div>
     </div>
 
-    <button id="scrollToTopButton" class="btn btn-primary" onclick="scrollToTop()">↑</button>
+    <!--  AFTER RECREATING THE NOTES SECTION < MAKE IT COME ONLY IN THE NOTES NOT IN OTHER LIKE HOME<button id="scrollToTopButton" class="btn btn-primary" onclick="scrollToTop()">↑</button> -->
+
+    <footer>
+        <div class="f-item-con">
+            <div class="app-info">
+                <span class='app-name'>
+                   Horizon
+                </span>
+                <p>We provide you with <strong>well organized</strong> and <strong>neat</strong> notes</p>
+            </div>
+            <div class="useful-links">
+                <div class="footer-title">Useful Links</div>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                </ul>
+            </div>
+            
+            </div>
+            <div class="g-i-t">
+                <div class="footer-title">Get in Touch</div>
+                <form class="contact-form" method="post" action="{{ url_for('contact') }}">
+                    <div class="form-group">
+                        <input type="text" id="input-name" name="name" class="form-control" placeholder="Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="input-email" name="email" class="form-control" placeholder="Email address" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="input-subject" name="subject" class="form-control" placeholder="Subject" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="message" id="input-message" class="form-control" placeholder="Message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+        <div class='cr-con'>Copyright &copy; 2024 | Horizon</div>
+    </footer>
+
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>

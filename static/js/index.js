@@ -9,14 +9,23 @@ const moonIcon = document.querySelector(".moon-icon");
 const profilePictureInput = document.getElementById("profilePictureInput");
 const profilePicture = document.getElementById("profilePicture");
 
+window.addEventListener('load', function() {
+    setTimeout(function() {
+        document.getElementById('overlay').classList.add('hidden');
+    }, 1000); // 2 seconds
+});
+
+
+
+
 // Function to set dark mode icons
 const setIcons = (isDarkMode) => {
     if (isDarkMode) {
-        sunIcon.style.display = "inline";
-        moonIcon.style.display = "none";
-    } else {
         sunIcon.style.display = "none";
         moonIcon.style.display = "inline";
+    } else {
+        sunIcon.style.display = "inline";
+        moonIcon.style.display = "none";
     }
 };
 
@@ -122,41 +131,100 @@ function logout() {
 }
 
 // Fetch user info and set profile picture
+// Fetch user info and set profile picture
 fetch("/user")
     .then((response) => response.json())
     .then((data) => {
         const userInfoElement = document.getElementById("user-info");
-        const toggleSidebarButton = document.getElementById(
-            "toggleSidebarButton",
-        );
+        const toggleSidebarButton = document.getElementById("toggleSidebarButton");
+        const loginNavItem = document.getElementById("loginNavItem");
 
         if (data.email) {
-            userInfoElement.innerHTML = `
-            
-            <div class="profile-pic">
-    <label class="-label" for="file">
-        <span class="glyphicon glyphicon-camera"></span>
-        <span>Change Image</span>
-        <input id="file" type="file" onchange="uploadProfilePicture(event)" />
-    </label>
-</div>
-
-            
-                    
-                    <p>Email: ${data.email}</p>
-                    <p>Joined: ${data.joined}</p>
-                    <button class="btn btn-primary" onclick="logout()">Logout</button>
-                `;
+            // User is logged in
+            toggleSidebarButton.style.backgroundImage = `url(${data.profile_picture || '/static/icons/user-profile.png'})`;
+            loginNavItem.style.display = "none";
             toggleSidebarButton.style.display = "block";
-        } else {
             userInfoElement.innerHTML = `
-                    <p>You are not logged in. <a href="/login">Login</a> to access your account.</p>
-                `;
+                <div class="profile-pic">
+                    <label class="-label" for="file">
+                        <span class="glyphicon glyphicon-camera"></span>
+                        <span>Change Image</span>
+                        <input id="file" type="file" onchange="uploadProfilePicture(event)" />
+                    </label>
+                </div>
+                <div class="profile-name">
+                    <span id="userName">Name: ${data.name || 'N/A'}</span>
+                    <button id="editNameBtn" class="edit-icon">✎</button>
+                    <input type="text" id="editNameInput" class="edit-input" style="display: none;" placeholder="Enter new name" />
+                    <button id="saveNameBtn" class="save-name-btn" style="display: none;">Save</button>
+                </div>
+                <p>Email: ${data.email}</p>
+                <p>Joined: ${data.joined}</p>
+                <button class="btn btn-primary" onclick="logout()">Logout</button>
+                <button class="btn btn-primary"><a style='color:white' href='/change-password'>Change Password</a></button>
+            `;
+            loadProfilePicture();
+            setupNameEditing();  // Call setupNameEditing after user info is loaded
+        } else {
+            // User is not logged in
+            toggleSidebarButton.style.display = "none";
+            loginNavItem.style.display = "block";
         }
     })
     .catch((error) => {
         console.error("Error fetching user info:", error);
     });
+
+
+// Setup event listeners for name editing
+function setupNameEditing() {
+    const editNameBtn = document.getElementById("editNameBtn");
+    const editNameInput = document.getElementById("editNameInput");
+    const saveNameBtn = document.getElementById("saveNameBtn");
+    const userName = document.getElementById("userName");
+
+    editNameBtn.addEventListener("click", () => {
+        // Show input and save button, hide user name and edit button
+        userName.classList.add("hidden");
+        editNameInput.style.display = "inline";
+        saveNameBtn.style.display = "inline";
+        editNameInput.value = userName.textContent.replace("Name: ", "").trim();
+        editNameBtn.style.display = "none";
+    });
+
+    saveNameBtn.addEventListener("click", () => {
+        const newName = editNameInput.value.trim();
+        if (newName) {
+            fetch("/update-name", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ name: newName })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    userName.textContent = `Name: ${newName}`;
+                    userName.classList.remove("hidden");
+                    editNameInput.style.display = "none";
+                    saveNameBtn.style.display = "none";
+                    editNameBtn.style.display = "inline";
+                } else {
+                    alert("Failed to update name: " + data.message);
+                }
+            })
+            .catch(error => {
+                alert("Error updating name: " + error.message);
+            });
+        } else {
+            alert("Name cannot be empty");
+        }
+    });
+}
+
+
+
 
 // Handle profile picture upload
 function uploadProfilePicture(event) {

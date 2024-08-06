@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 1em 0;
+        }
+        header h1 {
+            margin: 0;
+            text-align: center;
+        }
+        nav {
+            text-align: center;
+            margin-top: 1em;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin: 0 1em;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+        main {
+            max-width: 1000px;
+            margin: 2em auto;
+            padding: 1em;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #444;
+        }
+        section {
+            margin-bottom: 2em;
+        }
+        footer {
+            text-align: center;
+            padding: 1em;
+            background: #333;
+            color: #fff;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 2em;
+        }
+        .stats div {
+            background: #eaf4f4;
+            padding: 1em;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            flex: 1;
+            margin: 0 1em;
+            text-align: center;
+        }
+        .stats div h3 {
+            margin: 0;
+            color: #007bff;
+        }
+        .stats div p {
+            font-size: 1.2em;
+            margin: 0.5em 0 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('view_users') }}">View Users</a></li>
+                <li><a href="{{ url_for('manage_users') }}">Manage Users</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h2>Welcome, Admin!</h2>
+            <p>This is the admin dashboard where you can manage the users and perform administrative tasks.</p>
+
+            <!-- Statistics section -->
+            <div class="stats">
+                <div>
+                    <h3>Number of Users</h3>
+                    <p>{{ user_count }}</p>
+                </div>
+                <div>
+                    <h3>Messages Received</h3>
+                    <p>{{ message_count }}</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Horizon Learners</p>
+    </footer>
+</body>
+</html>

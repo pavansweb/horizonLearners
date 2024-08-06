@@ -1,0 +1,13 @@
+from app import db
+from app import User, Role
+
+# Find the user by email
+user = User.query.filter_by(email='pavansh555@gmail.com').first()
+
+# Check if the user exists and update the role
+if user:
+    user.role = Role.ADMIN0
+    db.session.commit()
+    print(f"User {user.email} role updated to ADMIN0.")
+else:
+    print("User not found.")

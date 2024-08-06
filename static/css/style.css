@@ -12,6 +12,7 @@
     --lesson-content-shadow: rgba(0, 0, 0, 0.1);
     --img-border-color: #bdc3c7;
     --scrollToTopButton: rgba(41, 128, 185, 0.7);
+    --theme-col: #2d4bf0;
 }
 
 body.dark-mode {
@@ -36,7 +37,7 @@ body.dark-mode {
 
 /* Body and general styles */
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     margin: 0;
     overflow-y: scroll;
     background-color: var(--background-color);
@@ -96,6 +97,8 @@ html {
     color: #4a98f7;
 }
 
+
+
 /* Toggle button styles */
 #toggleSidebarButton {
     /* position: absolute;
@@ -132,8 +135,6 @@ html {
     padding: 20px; /* Add padding inside the sidebar */
 }
 
-
-
 /* Account settings header styles */
 .sidebar h3 {
     color: #fff;
@@ -149,7 +150,7 @@ html {
 .sidebar .close-btn {
     position: absolute;
     top: 10px;
-    right: 25px;
+    right: 20px;
     font-size: 36px;
     color: white;
     cursor: pointer;
@@ -180,13 +181,14 @@ html {
     margin-top: 10px; /* Add margin above the logout button */
 }
 
-
+/* Profile picture container styles */
 .profile-pic {
     position: relative;
     width: 165px;
     height: 165px;
-    border-radius: 100%;
+    border-radius: 50%;
     overflow: hidden;
+    margin-bottom: 10px; /* Margin below profile picture */
 }
 
 .profile-pic input {
@@ -199,7 +201,7 @@ html {
     left: 0;
     width: 100%;
     height: 100%;
-    border-radius: 100%;
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -224,6 +226,65 @@ html {
 .profile-pic:hover span {
     opacity: 1;
 }
+
+/* Profile name editing styles */
+.profile-name {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 18px;
+    font-weight: bold;
+    position: relative;
+}
+
+#userName{
+    color:#ccc;
+}
+#userName.hidden {
+    display: none;
+}
+
+.edit-icon {
+    background: none;
+    border: none;
+    color: #f0f0f0;
+    cursor: pointer;
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.edit-icon:hover {
+    color: #00bcd4; /* Change to your preferred hover color */
+}
+
+/* Styling for editable name input (hidden by default) */
+#editNameInput {
+    display: none;
+    min-width: 150px; /* Adjusted to be more spacious */
+    width: calc(100% - 120px); /* Adjusted to fit well within the container */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-right: 10px; /* Space between input and save button */
+}
+
+#saveNameBtn {
+    display: none;
+    background-color: #00bcd4; /* Change to your preferred button color */
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+#saveNameBtn:hover {
+    background-color: #0097a7; /* Darker shade for hover */
+}
+
 
 
 
@@ -492,7 +553,63 @@ body.dark-mode .moon-icon {
     align-items: flex-start; /* Align items to the start */
 }
 
+/* From Uiverse.io by nikk7007 */ 
 .lesson-menu button {
+ --color: #00A97F;
+ padding: 0.8em 1.7em;
+ background-color: transparent;
+ border-radius: .3em;
+ position: relative;
+ overflow: hidden;
+ cursor: pointer;
+ transition: .5s;
+ font-weight: 400;
+ font-size: 17px;
+ border: 1px solid;
+ font-family: inherit;
+ text-transform: uppercase;
+ color: var(--color);
+ z-index: 1;
+}
+
+.lesson-mune button::before, button::after {
+ content: '';
+ display: block;
+ width: 50px;
+ height: 50px;
+ transform: translate(-50%, -50%);
+ position: absolute;
+ border-radius: 50%;
+ z-index: -1;
+ background-color: var(--color);
+ transition: 1s ease;
+}
+
+.lesson-menu button::before {
+ top: -1em;
+ left: -1em;
+}
+
+.lesson-menu button::after {
+ left: calc(100% + 1em);
+ top: calc(100% + 1em);
+}
+
+.lesson-menu button:hover::before, button:hover::after {
+ height: 410px;
+ width: 410px;
+}
+
+.lesson-menu button:hover {
+ color: rgb(10, 25, 30);
+}
+
+.lesson-menu button:active {
+ filter: brightness(.8);
+}
+
+
+/*.lesson-menu button {
     background: var(--button-bg);
     color: var(--text-color);
     border: none;
@@ -503,13 +620,13 @@ body.dark-mode .moon-icon {
     transition: background-color 0.3s ease, transform 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 100%; /* Ensure buttons take full width */
-    text-align: left; /* Align text to the left */
-}
+  /*  text-align: left; /* Align text to the left */
+/*}
 
 .lesson-menu button:hover {
     background-color: var(--button-hover-bg);
     transform: translateY(-2px);
-}
+}*/
 
 .lesson-content {
     margin-top: 20px;
@@ -534,5 +651,289 @@ body.dark-mode .moon-icon {
     .lesson-menu {
         flex-direction: column;
         align-items: center;
+    }
+}
+
+/* Full-screen overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 1s ease-in-out; /* Optional: smooth transition */
+    opacity: 1;
+}
+
+/* Hide the overlay */
+.overlay.hidden {
+    opacity: 0;
+    pointer-events: none; /* Prevent interaction with the overlay when hidden */
+}
+
+/* Loader container */
+.loader {
+    position: relative;
+    width: 96px;
+    height: 96px;
+    transform: rotate(45deg);
+}
+
+/* Loader squares animation */
+@keyframes square-animation {
+    0% {
+        left: 0;
+        top: 0;
+    }
+    10.5% {
+        left: 0;
+        top: 0;
+    }
+    12.5% {
+        left: 32px;
+        top: 0;
+    }
+    23% {
+        left: 32px;
+        top: 0;
+    }
+    25% {
+        left: 64px;
+        top: 0;
+    }
+    35.5% {
+        left: 64px;
+        top: 0;
+    }
+    37.5% {
+        left: 64px;
+        top: 32px;
+    }
+    48% {
+        left: 64px;
+        top: 32px;
+    }
+    50% {
+        left: 32px;
+        top: 32px;
+    }
+    60.5% {
+        left: 32px;
+        top: 32px;
+    }
+    62.5% {
+        left: 32px;
+        top: 64px;
+    }
+    73% {
+        left: 32px;
+        top: 64px;
+    }
+    75% {
+        left: 0;
+        top: 64px;
+    }
+    85.5% {
+        left: 0;
+        top: 64px;
+    }
+    87.5% {
+        left: 0;
+        top: 32px;
+    }
+    98% {
+        left: 0;
+        top: 32px;
+    }
+    100% {
+        left: 0;
+        top: 0;
+    }
+}
+
+/* Loader squares */
+.loader-square {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 28px;
+    height: 28px;
+    margin: 2px;
+    border-radius: 0;
+    background: white;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    animation: square-animation 10s ease-in-out infinite both;
+}
+
+.loader-square:nth-of-type(1) {
+    animation-delay: 0s;
+}
+
+.loader-square:nth-of-type(2) {
+    animation-delay: -1.4285714286s;
+}
+
+.loader-square:nth-of-type(3) {
+    animation-delay: -2.8571428571s;
+}
+
+.loader-square:nth-of-type(4) {
+    animation-delay: -4.2857142857s;
+}
+
+.loader-square:nth-of-type(5) {
+    animation-delay: -5.7142857143s;
+}
+
+.loader-square:nth-of-type(6) {
+    animation-delay: -7.1428571429s;
+}
+
+.loader-square:nth-of-type(7) {
+    animation-delay: -8.5714285714s;
+}
+
+
+
+/*Footer*/
+/* General Footer Styles */
+footer {
+    background-color: #111010;
+    color: white;
+    padding: 2rem 4rem;
+}
+
+.f-item-con {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+footer .app-name {
+    color: white;
+    border-left: 4px solid var(--theme-col);
+    padding-left: 1.5rem;
+    font-size: 1.875rem;
+    font-weight: 700;
+}
+
+.app-name .app-initial {
+    color: var(--theme-col);
+}
+
+footer .app-info p {
+    padding-left: 1.65rem;
+}
+
+footer .footer-title {
+    font-size: 1.25rem;
+    color: white;
+    border-left: 4px solid var(--theme-col);
+    padding-left: 1.5rem;
+}
+
+footer ul {
+    padding-left: 1.75rem;
+    color: white;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+footer ul li {
+    margin: 0.25rem 0;
+    cursor: pointer;
+    color: #d4d4d4;
+}
+
+footer ul li:hover {
+    color: white;
+}
+
+footer .help-sec {
+    grid-column-start: 2;
+}
+
+footer .cr-con {
+    background-color: #232127;
+    color: white;
+    padding: 1rem 4rem;
+    text-align: center;
+}
+
+.g-i-t {
+    display: grid;
+    grid-column-start: 3;
+}
+
+.g-i-t form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+}
+
+/* Responsive Footer Styles */
+@media (max-width: 992px) {
+    .f-item-con {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .g-i-t {
+        grid-column-start: 1;
+        grid-column-end: 3;
+    }
+}
+
+@media (max-width: 768px) {
+    footer {
+        padding: 1.5rem 2rem;
+    }
+
+    .f-item-con {
+        grid-template-columns: 1fr;
+    }
+
+    .app-name {
+        font-size: 1.5rem;
+        padding-left: 1rem;
+    }
+
+    .footer-title {
+        font-size: 1.125rem;
+    }
+
+    footer .app-info p {
+        padding-left: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .btn-primary {
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        font-size: 0.875rem;
+    }
+
+    .footer-title {
+        font-size: 1rem;
+    }
+
+    .app-name {
+        font-size: 1.25rem;
+    }
+
+    .footer {
+        padding: 1rem;
     }
 }

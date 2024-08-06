@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Confirmation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/confirmation.css') }}">
+</head>
+    <style>
+        /* Reset some default styles */
+        body, h1, p, a {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Set up the background and basic styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f3f4f6, #e2e2e2);
+            color: #333;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Center the container */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Style the message box */
+        .message-box {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        /* Style the icon */
+        .icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 1rem;
+        }
+
+        /* Style the heading */
+        h1 {
+            font-size: 2rem;
+            color: #2d72d9;
+            margin-bottom: 1rem;
+        }
+
+        /* Style paragraphs */
+        p {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 1rem;
+        }
+
+        /* Style strong text */
+        strong {
+            color: #2d72d9;
+        }
+
+        /* Style the button */
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            color: #fff;
+            background: #2d72d9;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #1a4f91;
+        }
+
+    </style>
+<body>
+    <div class="container">
+        <div class="message-box">
+            <img src="{{ url_for('static', filename='icons/checkmark.png') }}" alt="Checkmark" class="icon">
+            <h1>Verify Email</h1>
+            <p>Dear User,</p>
+            <p>An email has been sent to <strong>{{ email }}</strong>. Please check your inbox and click the verification link to activate your account.</p>
+            <p>If you don't see the email, please check your spam folder or try registering again.</p>
+            <a href="https://gmail.com" class="btn">Go to Mails</a>
+        </div>
+    </div>
+</body>
+</html>

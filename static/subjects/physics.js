@@ -1,13 +1,11 @@
 // Example function to show subject content (e.g., in subjects/physics.js)
 function showSubjectContent(container) {
     container.innerHTML = `
-        <h2>Physics Lessons</h2>
+        <h2>Choose Board</h2>
         <div class="lesson-menu">
-            <button class="btn btn-primary btn-block" onclick="loadLesson('lesson1')">Chapter 1: Force</button>
-            <button class="btn btn-primary btn-block" onclick="loadLesson('lesson2')">Chapter 2: Work, Energy and Power</button>
-            <button class="btn btn-primary btn-block" onclick="loadLesson('lesson3')">Chapter 3: Machines</button>
-            <button class="btn btn-primary btn-block" onclick="loadLesson('lesson4')">Chapter 4: Refraction of Light at Plane Surfaces</button>
-            <button class="btn btn-primary btn-block" onclick="loadLesson('lesson5')">Chapter 5: Refraction through a Lens</button>
+            <button class="btn btn-primary btn-block" onclick="loadboard('Cbse')">CBSE</button>
+            <button class="btn btn-primary btn-block" onclick="loadBoard('icse')">ICSE</button>
+            
         </div>
         <div id="lessonContent" class="lesson-content">
             <p>Select a lesson to view its content.</p>
@@ -16,31 +14,28 @@ function showSubjectContent(container) {
 }
 
 // Function to load individual lessons
-function loadLesson(lesson) {
+function loadBoard(board) {
     let content = '';
-    switch (lesson) {
-        case 'lesson1':
+    switch (board) {
+        case 'Cbse':
             content = `
-                <h2>Lesson 1: Force</h2>
-                <p>This is the content for Lesson 1.</p>
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">`;
+               <div class="lesson-menu">
+            <button class="btn btn-primary btn-block" onclick="loadLesson('lesson1')">Chapter 1: Force</button>
+            <button class="btn btn-primary btn-block" onclick="loadLesson('lesson2')">Chapter 2: Work, Energy and Power</button>
+            <button class="btn btn-primary btn-block" onclick="loadLesson('lesson3')">Chapter 3: Machines</button>
+            <button class="btn btn-primary btn-block" onclick="loadLesson('lesson4')">Chapter 4: Refraction of Light at Plane Surfaces</button>
+            <button class="btn btn-primary btn-block" onclick="loadLesson('lesson5')">Chapter 5: Refraction through a Lens</button>
+        </div>`;
             break;
-        case 'lesson2':
+        case 'icse':
             content = `
-                <h2>Lesson 2: Work, Energy and Power</h2>
-                <p>This is the content for Lesson 2.</p>
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">
-                <img src="https://www.vedantu.com/content-images/5b5578aae4b00a014d4897c3/1.png" alt="network_error" class="lesson-img">`;
+                <div class="lesson-menu">
+            <button class="btn btn-primary btn-block" onclick="loadLesson('lesson1')">Chapter 1: Force</button>
+            <button class="btn btn-primary btn-block" onclick="loadLesson('lesson2')">Chapter 2: Work, Energy and Power</button>
+            <button class="btn btn-primary btn-block" onclick="loadLesson('lesson3')">Chapter 3: Machines</button>
+            <button class="btn btn-primary btn-block" onclick="loadLesson('lesson4')">Chapter 4: Refraction of Light at Plane Surfaces</button>
+            <button class="btn btn-primary btn-block" onclick="loadLesson('lesson5')">Chapter 5: Refraction through a Lens</button>
+        </div>`;
             break;
 
         // Add cases for other lessons

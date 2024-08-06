@@ -32,6 +32,8 @@
     <div class="form-container" id="signup-form" style="display: none;">
       <h1>Sign Up</h1>
       <form id="registerForm">
+        <label for="register-name">Name</label>
+        <input type="text" id="register-name" name="name" required>
         <label for="register-email">Email</label>
         <input type="email" id="register-email" name="email" required>
         <label for="register-password">Password</label>
@@ -104,6 +106,7 @@
     document.getElementById("registerForm").addEventListener("submit", function (event) {
       event.preventDefault();
 
+      const name = document.getElementById("register-name").value;
       const email = document.getElementById("register-email").value;
       const password = document.getElementById("register-password").value;
       const confirmPassword = document.getElementById("register-confirm-password").value;
@@ -113,25 +116,23 @@
         return;
       }
 
-      fetch("/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.message === "Registration successful") {
-          window.location.href = "/login";
-        } else {
-          showNotification(data.message);
-        }
-      })
-      .catch(() => {
-        showNotification("An error occurred. Please try again.");
-      });
+    fetch("/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.message === "Registration successful. Please check your email to verify your account.") {
+        window.location.href = "/registration-confirmation/" + encodeURIComponent(email); // Redirect to the confirmation page
+      } else {
+        showNotification(data.message);
+      }
+    })
+    .catch(() => {
+      showNotification("An error occurred. Please try again.");
     });
-
-
+    });
   </script>
 </body>
 </html>
