@@ -4,6 +4,6 @@ Flask-SQLAlchemy
 Flask-Migrate 
 Flask-Cors 
 Werkzeug 
-tsdangerous 
+itsdangerous 
 requests
 gunicorn
