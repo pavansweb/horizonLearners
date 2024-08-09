@@ -84,7 +84,8 @@ def role_required(required_roles):
         return decorated_function
     return decorator
 
-# Routes
+
+# Routes deleted already
 
 @app.errorhandler(401)
 def unauthorized_error(error):
@@ -205,90 +206,285 @@ def register():
     # Send verification email
     verification_url = url_for('verify_email', token=verification_token, _external=True)
     msg = Message('Confirm Your Email', sender=app.config['MAIL_USERNAME'], recipients=[email])
-    msg.body = f'Please click the following link to confirm your email: {verification_url}'
-    mail.send(msg)
-
-    logger.info(f"New user registered: {email}")
-    return jsonify({'message': 'Registration successful. Please check your email to verify your account.'}), 201
-
-@app.route('/verify/<token>')
-def verify_email(token):
+    msg.body = f'Please click the link to verify your email: {verification_url}'
     try:
-        email = confirm_token(token)
-        user = User.query.filter_by(email=email).first()
-        if user and not user.is_verified:
-            user.is_verified = True
-            user.verification_token = None
-            db.session.commit()
-            logger.info(f"Email verified for user: {email}")
-            return redirect(url_for('login'))
-        logger.warning(f"Verification failed for token: {token}")
-        return jsonify({'message': 'Verification link is invalid or expired'}), 400
+        mail.send(msg)
+        logger.info(f"New user registered: {email}")
     except Exception as e:
-        logger.error(f"Error verifying email: {str(e)}")
-        return jsonify({'message': 'An error occurred'}), 500
+        logger.error(f"Error sending verification email to {email}: {e}")
+        return jsonify({'message': 'Registration successful, but email could not be sent.'}), 500
 
-@app.route('/logout')
-def logout():
-    session.pop('user_id', None)
-    logger.info("User logged out")
-    return redirect(url_for('index'))
+    return jsonify({'message': 'Registration successful. Please check your email to verify your account.'}), 200
 
-@app.route('/profile')
-@role_required([Role.USER, Role.ADMIN0, Role.ADMIN1, Role.ADMIN2])
-def profile():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
-    user = db.session.get(User, session['user_id'])
-    profile_picture = user.profile_picture if user else '/static/icons/user-profile.png'
-    return render_template('profile.html', user=user, profile_picture=profile_picture)
-
-@app.route('/upload', methods=['POST'])
-@role_required([Role.USER, Role.ADMIN0, Role.ADMIN1, Role.ADMIN2])
-def upload_profile_picture():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
-    if 'file' not in request.files:
-        return jsonify({'message': 'No file part'}), 400
-
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({'message': 'No selected file'}), 400
-
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        user = db.session.get(User, session['user_id'])
-        user.profile_picture = f'/uploads/profile_pics/{filename}'
-        db.session.commit()
-        logger.info(f"Profile picture updated for user ID: {user.id}")
-        return redirect(url_for('profile'))
-
-    return jsonify({'message': 'Invalid file type'}), 400
-
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
-
-# Token generation and confirmation
 def generate_confirmation_token(email):
     s = Serializer(app.config['SECRET_KEY'], salt='email-confirm')
-    return s.dumps(email, salt='email-confirm')
+    return s.dumps({'email': email})
 
 def confirm_token(token, expiration=3600):
     s = Serializer(app.config['SECRET_KEY'], salt='email-confirm')
     try:
-        email = s.loads(token, salt='email-confirm', max_age=expiration)
+        data = s.loads(token, max_age=expiration)
     except Exception as e:
-        logger.error(f"Error decoding token: {str(e)}")
-        return None
-    return email
+        logger.error(f"Error confirming token: {str(e)}")
+        return False
+    return data
+
+@app.route('/verify-email/<token>', methods=['GET'])
+def verify_email(token):
+    print(f"Received token: {token}")
+    data = confirm_token(token)
+    if data is None:
+        flash('The verification link is invalid or has expired.', 'error')
+        return redirect(url_for('index'))
+
+    user = User.query.filter_by(email=data['email']).first_or_404()
+    if user.is_verified:
+        flash('Account already verified. You are now logged in.', 'info')
+        session['user_id'] = user.id  # Automatically log the user in
+    else:
+        user.is_verified = True
+        user.verification_token = None
+        db.session.commit()
+        session['user_id'] = user.id  # Automatically log the user in
+        flash('Your account has been verified. You are now logged in.', 'success')
+
+    return redirect(url_for('index'))
+
+
+@app.route('/change-password', methods=['GET', 'POST'])
+def change_password():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    user = db.session.get(User, session['user_id'])
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+
+    if request.method == 'POST':
+        data = request.form
+        current_password = data.get('current_password')
+        new_password = data.get('new_password')
+        confirm_password = data.get('confirm_password')
+
+        if not all([current_password, new_password, confirm_password]):
+            flash('All fields are required!', 'error')
+            return redirect(url_for('change_password'))
+
+        if not check_password_hash(user.password_hash, current_password):
+            flash('Current password is incorrect!', 'error')
+            return redirect(url_for('change_password'))
+
+        if new_password != confirm_password:
+            flash('New passwords do not match!', 'error')
+            return redirect(url_for('change_password'))
+
+        user.password_hash = generate_password_hash(new_password)
+        db.session.commit()
+        flash('Password changed successfully!', 'success')
+        return redirect(url_for('index'))
+
+    return render_template('change_password.html')
+
+
+@app.route('/registration-confirmation/<email>', methods=['GET'])
+def registration_confirmation(email):
+    return render_template('registration_confirmation.html', email=email)
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.pop('user_id', None)
+    return jsonify({'success': True})
+
+@app.route('/user', methods=['GET'])
+def user_info():
+    if 'user_id' in session:
+        user = db.session.get(User, session['user_id'])
+        if user:
+            return jsonify({
+                'email': user.email,
+                'joined': user.created_at.strftime('%Y-%m-%d'),
+                'profile_picture': user.profile_picture,
+                'name': user.name  # Include the name field
+            })
+    # Return a response for non-logged-in users
+    return jsonify({
+        'email': None,
+        'joined': None,
+        'profile_picture': '/static/icons/user-profile.png',
+        'name': None
+    })
+
+
+
+
+@app.route('/admin', methods=['GET'])
+@role_required([Role.ADMIN0, Role.ADMIN1, Role.ADMIN2])
+def admin():
+    # Print a message to the console when an admin accesses the admin page
+    user = db.session.get(User, session['user_id'])
+    print(f"Admin user {user.email} accessed the admin page.")
+
+    user_count = User.query.count()
+    message_count = ContactMessage.query.count()
+
+
+    return render_template('admin.html', user_count=user_count, message_count=message_count)
+
+
+@app.route('/view-users', methods=['GET'])
+@role_required([Role.ADMIN0, Role.ADMIN1])
+def view_users():
+    user = db.session.get(User, session['user_id'])
+
+    users = User.query.all()
+    users_data = [{
+        'email': user.email,
+        'role': user.role.value,
+        'joined': user.created_at.strftime('%Y-%m-%d'),
+        'password_hash': user.password_hash  # Include hashed password
+    } for user in users]
+    return jsonify(users_data)
+    return jsonify({'message': 'Unauthorized'}), 403
+
+
+
+@app.route('/manage-users', methods=['GET'])
+@role_required([Role.ADMIN0, Role.ADMIN1, Role.ADMIN2])
+def manage_users():
+    users = User.query.all()
+    return render_template('manage_users.html', users=users)
+
+@app.route('/delete-user/<int:user_id>', methods=['POST'])
+@role_required([Role.ADMIN0])
+def delete_user(user_id):
+    user = User.query.get(user_id)
+    if user:
+        # Delete the user's profile picture if it exists
+        if user.profile_picture and user.profile_picture != '/static/icons/user-profile.png':
+            old_file_path = os.path.join(app.config['UPLOAD_FOLDER'], os.path.basename(user.profile_picture))
+            if os.path.exists(old_file_path):
+                os.remove(old_file_path)
+
+        # Delete the user from the database
+        db.session.delete(user)
+        db.session.commit()
+        flash('User deleted successfully', 'success')
+    else:
+        flash('User not found', 'error')
+
+    return redirect(url_for('manage_users'))
+
+
+
+@app.route('/assign-role/<int:user_id>', methods=['POST'])
+@role_required([Role.ADMIN0, Role.ADMIN1, Role.ADMIN2])
+def assign_role(user_id):
+    new_role = request.form.get('role')
+
+    if new_role not in [role.value for role in Role]:
+        flash('Invalid role', 'error')
+        return redirect(url_for('manage_users'))
+
+    user = User.query.get(user_id)
+    if user:
+        user.role = Role(new_role)
+        db.session.commit()
+        flash(f'Role updated to {new_role} successfully', 'success')
+    else:
+        flash('User not found', 'error')
+
+    return redirect(url_for('manage_users'))
+
+@app.route('/userinfo/<int:user_id>', methods=['GET'])
+@role_required([Role.ADMIN0, Role.ADMIN1, Role.ADMIN2])
+def userinfo(user_id):
+    user = User.query.get(user_id)
+    if user:
+        return render_template('userinfo.html',
+                               user={
+                                   'email': user.email,
+                                   'joined': user.created_at.strftime('%Y-%m-%d'),
+                                   'profile_picture': user.profile_picture
+                               })
+    return jsonify({'message': 'User not found'}), 404
+
+@app.route('/update-name', methods=['POST'])
+def update_name():
+    if 'user_id' not in session:
+        return jsonify({'message': 'User not logged in'}), 401
+
+    user = db.session.get(User, session['user_id'])
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+
+    data = request.json
+    new_name = data.get('name')
+
+    if not new_name:
+        return jsonify({'message': 'Name is required'}), 400
+
+    user.name = new_name
+
+    db.session.commit()
+
+    return jsonify({'success': True, 'message': 'Name updated successfully'})
+
+
+
+@app.route('/upload-profile-picture', methods=['POST'])
+def upload_profile_picture():
+    if 'file' not in request.files:
+        return jsonify({'message': 'No file part'}), 400
+
+    file = request.files['file']
+
+    if file.filename == '':
+        return jsonify({'message': 'No selected file'}), 400
+
+    if file and allowed_file(file.filename):
+        if 'user_id' not in session:
+            return jsonify({'message': 'User not logged in'}), 401
+
+        user = db.session.get(User, session['user_id'])
+        if not user:
+            return jsonify({'message': 'User not found'}), 404
+
+        if user.profile_picture and user.profile_picture != '/static/icons/user-profile.png':
+            old_file_path = os.path.join(app.config['UPLOAD_FOLDER'], os.path.basename(user.profile_picture))
+            if os.path.exists(old_file_path):
+                os.remove(old_file_path)
+
+        email = user.email
+        ext = file.filename.rsplit('.', 1)[1].lower()
+        filename = f"{email}.{ext}"
+
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+
+        user.profile_picture = url_for('get_profile_picture', filename=filename)
+        db.session.commit()
+
+        return jsonify({
+            'message': 'Profile picture uploaded successfully',
+            'profile_picture_url': user.profile_picture
+        })
+
+    return jsonify({'message': 'File type not allowed'}), 400
+
+
+@app.route('/profile-pic/<filename>')
+def get_profile_picture(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+# Helper functions
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+
+
 
 # Run the application
 if __name__ == '__main__':
@@ -301,3 +497,4 @@ if __name__ == '__main__':
         db.create_all()  # Ensure the database is created
 
     app.run(host='0.0.0.0', port=3000, debug=True)
+
