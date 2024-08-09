@@ -12,7 +12,7 @@ const profilePicture = document.getElementById("profilePicture");
 window.addEventListener('load', function() {
     setTimeout(function() {
         document.getElementById('overlay').classList.add('hidden');
-    }, 1000); // 2 seconds
+    }, 1000); // 1 seconds
 });
 
 

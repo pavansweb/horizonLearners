@@ -3,7 +3,7 @@ Flask-Mail
 Flask-SQLAlchemy 
 Flask-Migrate 
 Flask-Cors 
-Werkzeug i
+Werkzeug 
 tsdangerous 
 requests
 gunicorn
